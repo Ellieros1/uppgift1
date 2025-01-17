@@ -16,13 +16,14 @@ class Bok:
     som skapas ur klassen har en titel, författare och en variabel som håller
     reda på om boken är utlånad eller inte. """
     
-    def __init__(self, titel, författare, utlånad=False): #Definerar init som initieringsmetod och lägger till nytt bok objekt med, titel, författare och om boken är utlånad eller inte.
+    def __init__(self, titel, författare, årtal, utlånad=False): #Definerar init som initieringsmetod och lägger till nytt bok objekt med, titel, författare och om boken är utlånad eller inte.
         self.titel = titel #Lägger till titel attributet(Attribut egenskap som går ihop med ett objekt i en klass, attributet lagrar data som beskriver egenskaper/tillståndet hos ett objekt.)
         self.författare = författare #lägger till författare attributet.
+        self.årtal = årtal
         self.utlånad = utlånad #lägger till utlånad attributet med standadard värdet false.
 
     def __str__(self): #Definerar str som skapar en strängreperestation av objektet.
-        return f"Boken '{self.titel}', skriven av {self.författare}, utlånad: {'ja' if self.utlånad else 'nej'}."#Retunerar en sträng med information om boken.#Skapar en sträng med infromation om boken.#Variabeln "f" används för att skapa strängar med variabler och uttryck på ett mycket enklare sätt och som gör koden mer läsbar alltså mindre sökig och det ser bättre ut. Utan f strängar så används t.ex "+" för att sammanfoga flera strängar.
+        return f"Boken '{self.titel}', skriven av {self.författare}, {self.årtal}, utlånad: {'ja' if self.utlånad else 'nej'}."#Retunerar en sträng med information om boken.#Skapar en sträng med infromation om boken.#Variabeln "f" används för att skapa strängar med variabler och uttryck på ett mycket enklare sätt och som gör koden mer läsbar alltså mindre sökig och det ser bättre ut. Utan f strängar så används t.ex "+" för att sammanfoga flera strängar.
 
 class Bibliotek:
     """ Bibliotek är en klass som representerar en bibliotekskatalog. Ett objekt
@@ -38,14 +39,14 @@ class Bibliotek:
         if os.path.exists(self.filnamn): #Kontrollerar om filen finns.
             with open(self.filnamn, "r") as fil: #Öppnar filan i "r" alltså läsläge.
                 for rad in fil: #Går igenom varje rad i filen med en for loop.
-                    författare, titel, utlånad = rad.strip().split(",") #Delar upp raden författare, titel och ifall den är utlånad eller inte.
-                    böcker.append(Bok(författare, titel, int(utlånad))) #Lägger till ett bok objekt och lägger till det i listan med hjälp av "append".
+                    författare, titel, årtal, utlånad = rad.strip().split(",") #Delar upp raden författare, titel och ifall den är utlånad eller inte.
+                    böcker.append(Bok(författare, titel, int(årtal), int(utlånad))) #Lägger till ett bok objekt och lägger till det i listan med hjälp av "append".
         return böcker #Retunerar boklista
 
     def spara_till_fil(self):
         with open(self.filnamn, "w") as fil: #Öppnar filen i "w" skrivläge.
             for bok in self.böcker: #Upprepar varje bok i listan genom en for loop.
-                fil.write(f"{bok.författare},{bok.titel},{int(bok.utlånad)}\n") #Skriver ner alla bokens attribut till filen. författare, titel och utlånad status. /n används för att skriva ut en ny rad.
+                fil.write(f"{bok.författare},{bok.titel},{int(bok.årtal)},{int(bok.utlånad)}\n") #Skriver ner alla bokens attribut till filen. författare, titel och utlånad status. /n används för att skriva ut en ny rad.
 
     def hitta_titel(self, titel):
         return [bok for bok in self.böcker if bok.titel.lower() == titel.lower()] #Retunerar en lista med böcker som matchar titeln.
@@ -69,11 +70,11 @@ class Bibliotek:
                 return f"Boken '{titel}' har återlämnats till biblioteket." #Retunerar ett meddelande att boken är återlämnad.
         return f"Boken '{titel}' finns inte eller är redan återlämnad." #Retunerar felmeddelande att boken inte går att återlämnas.
 
-    def lägg_till_bok(self, författare, titel):
+    def lägg_till_bok(self, författare, titel, årtal):
         if not self.hitta_titel(titel): #Kontrollerar om boken inte redan finns.
-            self.böcker.append(Bok(författare, titel)) #Skapar ett nytt "bok"ojekt och lägger till den i listan.
+            self.böcker.append(Bok(författare, titel, årtal)) #Skapar ett nytt "bok"ojekt och lägger till den i listan.
             self.spara_till_fil() #Sparar ändringen till filen
-            return f"Boken '{titel}' av {författare} är nu tillagd i biblioteket." #Retunerar meddlande att boken är tillagd.
+            return f"Boken '{titel}' av {författare} ({årtal}) är nu tillagd i biblioteket." #Retunerar meddlande att boken är tillagd.
         return f"Boken '{titel}' finns redan i biblioteket." #Retunerar felmeddelande att boken redan finns.
 
     def ta_bort_bok(self, titel):
@@ -88,7 +89,7 @@ class Bibliotek:
         return "\n".join(str(bok) for bok in self.böcker) # Retunerar Strängar som reprensenterar alla böcker i listan.
     
     def sortera_böcker(self, efter_titel=True):
-        self.böcker.sort(key=lambda bok: bok.titel if efter_titel else bok.författare) # Sorterar böckerna efter title eller författare.
+        self.böcker.sort(key=lambda bok: bok.titel if efter_titel else bok.årtal) # Sorterar böckerna efter title eller författare.
         return self.lista_böcker() #Retunerar den sorterade listan.
 
 # ------------------------------ Huvudprogram --------------------------------- #
@@ -130,6 +131,7 @@ def main():
         elif meny_val == "5":
             författare = input("Ange författare: ") #Be användaren att ange författaren.
             titel = input("Ange titeln på den nya boken: ") #Be använderen att ange titeln på den nya boken.
+            årtal = input("Ange årtalet på den nya boken: ")
             print(bibliotek.lägg_till_bok(författare, titel)) #Försöker lägg till boken och skriver ut resultatet.
         elif meny_val == "6":
             titel = input("Ange titeln på boken du vill ta bort: ") #Ber användaren att ange titeln som den vill ta bort.
@@ -137,7 +139,13 @@ def main():
         elif meny_val == "7":
             print(bibliotek.lista_böcker()) #Skriver ut en lista över alla böcker i biblioteket.
         elif meny_val == "8":
-            print(bibliotek.sortera_böcker()) #Skriver ut en sorterad lista över alla böcker i biblioteket.
+            val = input("Vill du sortera efter titel eller årtal? (t/å): ")
+            if val.lower() == "t":
+                print(bibliotek.sortera_böcker(efter_titel=True)) #Skriver ut en sorterad lista över alla böcker i biblioteket.
+            elif val.lower() == "å":
+                print(bibliotek.sortera_böcker(efter_titel=False))
+            else:
+                print("ogiltigt val. Du kan bara ange t(för titel) eller å(för årtal)")
         elif meny_val == "q":
             print("Tack för att du använde biblioteket") #Skriver ut tack meddelande till användaren.
             quit #Avslutar programet.

@@ -1,9 +1,10 @@
-Romeo och Julia, William Shakespeare, 1
+Romeo och Julia, William Shakespeare, 0
 Catch 22, Joseph Heller, 1
 A Confederacy of Dunces, John Kennedy Toole, 1
 The Hitchhiker’s Guide to the Galaxy, Douglas Adams, 1
 The Restaurant at the End of the Universe, Douglas Adams, 1
-Life, the Universe and Everything, Douglas Adams, 1
+Life the Universe and Everything, Douglas Adams, 1
 Mostly Harmless, Douglas Adams, 1
 I Robot, Isaac Asimov, 1
 Don Quixote, Miguel Cervantes, 1
+Doktor Glas, Hjalmar Söderberg, 0
