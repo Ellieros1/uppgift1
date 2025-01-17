@@ -18,12 +18,12 @@ class Bok:
     
     def __init__(self, författare, titel, årtal, utlånad=False): #Definerar init som initieringsmetod och lägger till nytt bok objekt med, titel, författare och om boken är utlånad eller inte.
         self.titel = titel #Lägger till titel attributet(Attribut egenskap som går ihop med ett objekt i en klass, attributet lagrar data som beskriver egenskaper/tillståndet hos ett objekt.)
-        self.författare = författare #lägger till författare attributet.
-        self.årtal = årtal
-        self.utlånad = utlånad #lägger till utlånad attributet med standadard värdet false.
+        self.författare = författare #Lägger till författare attributet.
+        self.årtal = årtal #Lägger till årtal attributet.
+        self.utlånad = utlånad #Lägger till utlånad attributet med standadard värdet false.
 
     def __str__(self): #Definerar str som skapar en strängreperestation av objektet.
-        return f"Boken '{self.titel}', skriven av {self.författare}, {self.årtal}, utlånad: {'ja' if self.utlånad else 'nej'}."#Retunerar en sträng med information om boken.#Skapar en sträng med infromation om boken.#Variabeln "f" används för att skapa strängar med variabler och uttryck på ett mycket enklare sätt och som gör koden mer läsbar alltså mindre sökig och det ser bättre ut. Utan f strängar så används t.ex "+" för att sammanfoga flera strängar.
+        return f"Boken '{self.titel}', skriven av {self.författare}, {self.årtal}, utlånad: {'ja' if self.utlånad else 'nej'}." #Retunerar en sträng med information om boken. Variabeln "f" används för att skapa strängar med variabler och uttryck på ett mycket enklare sätt och som gör koden mer läsbar alltså mindre sökig och det ser bättre ut. Utan f strängar så används t.ex "+" för att sammanfoga flera strängar.
 
 class Bibliotek:
     """ Bibliotek är en klass som representerar en bibliotekskatalog. Ett objekt
@@ -37,14 +37,14 @@ class Bibliotek:
     def läs_från_fil(self):
         böcker = [] #Skapar en tom lista som används för att lagra alla böcker i.
         if os.path.exists(self.filnamn): #Kontrollerar om filen finns.
-            with open(self.filnamn, "r", encoding="utf-8") as fil: #Öppnar filan i "r" alltså läsläge.
+            with open(self.filnamn, "r", encoding="utf-8") as fil: #Öppnar filan i "r" alltså läsläge och encoding="utf-8" så att bokstäverna å,ö,ä är möjliga att använda.
                 for rad in fil: #Går igenom varje rad i filen med en for loop.
                     författare, titel, årtal, utlånad = rad.strip().split(",") #Delar upp raden författare, titel och ifall den är utlånad eller inte.
                     böcker.append(Bok(författare, titel, int(årtal), int(utlånad))) #Lägger till ett bok objekt och lägger till det i listan med hjälp av "append".
         return böcker #Retunerar boklista
 
     def spara_till_fil(self):
-        with open(self.filnamn, "w", encoding="utf-8") as fil: #Öppnar filen i "w" skrivläge.
+        with open(self.filnamn, "w", encoding="utf-8") as fil: #Öppnar filen i "w" skrivläge och encoding="utf-8"så att bokstäverna å,ö,ä är möjliga använda.
             for bok in self.böcker: #Upprepar varje bok i listan genom en for loop.
                 fil.write(f"{bok.författare},{bok.titel},{int(bok.årtal)},{int(bok.utlånad)}\n") #Skriver ner alla bokens attribut till filen. författare, titel och utlånad status. /n används för att skriva ut en ny rad.
 
@@ -115,16 +115,16 @@ def main():
         if meny_val == "1":
             titel = input("Ange titel: ") #Ber användaren att ange titel.
             resultat = bibliotek.hitta_titel(titel) #Hittar bok som matchar titeln.
-            if not resultat:
-                print("Det finns ingen bok med det namnet. Försök igen.")
+            if not resultat: #Om användare anger ett ord eller bokstav som inte matchar med någon titel till en bok.
+                print("Det finns ingen bok med det namnet. Försök igen.") #Informerar användaren att en bok med titeln inte hittades med namnet/bokstäverna som nämdes.
             else:
                 for bok in resultat: #Går över matchande böcker.
                     print(bok) #Ange ut boken.
         elif meny_val == "2":
             författare = input("Ange författare: ") #Ber användaren att ange författare.
-            resultat = bibliotek.hitta_författare(författare) #Hittar böcker som matchar förattaren.
-            if not resultat:
-                print("Ingen bok med den författaren hittades.")
+            resultat = bibliotek.hitta_författare(författare) #Hittar böcker som matchar författaren.
+            if not resultat: #Om användare anger ett namn eller bokstav som inte matchar med någon författare till en eller flera bok.
+                print("Ingen bok med den författaren hittades.")#Informerar användaren att en bok med den författaren inte hittades med namnet/bokstäverna som nämdes.
             else:
                 for bok in resultat: #Går över matchande böcker.
                     print(bok) #Skriver ut boken.
@@ -137,12 +137,7 @@ def main():
         elif meny_val == "5":
             författare = input("Ange författare: ") #Be användaren att ange författaren.
             titel = input("Ange titeln på den nya boken: ") #Be använderen att ange titeln på den nya boken.
-            while True:
-                try:
-                    årtal = int(input("Ange årtalet på den nya boken: "))
-                    break
-                except ValueError:
-                    print("Årtalet måste vara ett nummer.")
+            årtal = input("Ange årtal på den nya boken: ")
             print(bibliotek.lägg_till_bok(författare, titel, årtal)) #Försöker lägg till boken och skriver ut resultatet.
         elif meny_val == "6":
             titel = input("Ange titeln på boken du vill ta bort: ") #Ber användaren att ange titeln som den vill ta bort.
@@ -150,13 +145,13 @@ def main():
         elif meny_val == "7":
             print(bibliotek.lista_böcker()) #Skriver ut en lista över alla böcker i biblioteket.
         elif meny_val == "8":
-            val = input("Vill du sortera efter titel eller årtal? (t/å): ")
-            if val.lower() == "t":
-                print(bibliotek.sortera_böcker(efter_titel=True)) #Skriver ut en sorterad lista över alla böcker i biblioteket.
-            elif val.lower() == "å":
-                print(bibliotek.sortera_böcker(efter_titel=False))
-            else:
-                print("ogiltigt val. Du kan bara ange t(för titel) eller å(för årtal)")
+            val = input("Vill du sortera efter titel eller årtal? (t/å): ") #Ber användaren att ange ifall den vill sortera böckerna efter titel eller årtal.
+            if val.lower() == "t": #Om användaren anger bokstaven "t".
+                print(bibliotek.sortera_böcker(efter_titel=True)) #Sorterar böckerna efter titel och skriver ut den sorterade listan.
+            elif val.lower() == "å": #Om användaren anger bokstaven "å".
+                print(bibliotek.sortera_böcker(efter_titel=False)) #Sorterar böckerna efter årtal och skriver ut den sorterade listan.
+            else: #Om användaren anger något annat än t eller å.
+                print("ogiltigt val. Du kan bara ange t(för titel) eller å(för årtal)") #Informerar användaren om att valet var ogiltigt.
         elif meny_val == "q":
             print("Tack för att du använde biblioteket") #Skriver ut tack meddelande till användaren.
             quit #Avslutar programet.
