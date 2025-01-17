@@ -16,7 +16,7 @@ class Bok:
     som skapas ur klassen har en titel, författare och en variabel som håller
     reda på om boken är utlånad eller inte. """
     
-    def __init__(self, titel, författare, årtal, utlånad=False): #Definerar init som initieringsmetod och lägger till nytt bok objekt med, titel, författare och om boken är utlånad eller inte.
+    def __init__(self, författare, titel, årtal, utlånad=False): #Definerar init som initieringsmetod och lägger till nytt bok objekt med, titel, författare och om boken är utlånad eller inte.
         self.titel = titel #Lägger till titel attributet(Attribut egenskap som går ihop med ett objekt i en klass, attributet lagrar data som beskriver egenskaper/tillståndet hos ett objekt.)
         self.författare = författare #lägger till författare attributet.
         self.årtal = årtal
@@ -37,22 +37,22 @@ class Bibliotek:
     def läs_från_fil(self):
         böcker = [] #Skapar en tom lista som används för att lagra alla böcker i.
         if os.path.exists(self.filnamn): #Kontrollerar om filen finns.
-            with open(self.filnamn, "r") as fil: #Öppnar filan i "r" alltså läsläge.
+            with open(self.filnamn, "r", encoding="utf-8") as fil: #Öppnar filan i "r" alltså läsläge.
                 for rad in fil: #Går igenom varje rad i filen med en for loop.
                     författare, titel, årtal, utlånad = rad.strip().split(",") #Delar upp raden författare, titel och ifall den är utlånad eller inte.
                     böcker.append(Bok(författare, titel, int(årtal), int(utlånad))) #Lägger till ett bok objekt och lägger till det i listan med hjälp av "append".
         return böcker #Retunerar boklista
 
     def spara_till_fil(self):
-        with open(self.filnamn, "w") as fil: #Öppnar filen i "w" skrivläge.
+        with open(self.filnamn, "w", encoding="utf-8") as fil: #Öppnar filen i "w" skrivläge.
             for bok in self.böcker: #Upprepar varje bok i listan genom en for loop.
                 fil.write(f"{bok.författare},{bok.titel},{int(bok.årtal)},{int(bok.utlånad)}\n") #Skriver ner alla bokens attribut till filen. författare, titel och utlånad status. /n används för att skriva ut en ny rad.
 
     def hitta_titel(self, titel):
-        return [bok for bok in self.böcker if bok.titel.lower() == titel.lower()] #Retunerar en lista med böcker som matchar titeln.
+        return [bok for bok in self.böcker if titel.lower() in bok.titel.lower()] #Retunerar en lista med böcker som matchar titeln.
 
     def hitta_författare(self, författare):
-        return [bok for bok in self.böcker if bok.författare.lower() == författare.lower()] #Retunerar en lista med böcker som matchar författaren.
+        return [bok for bok in self.böcker if författare.lower() in bok.författare.lower()] #Retunerar en lista med böcker som matchar författaren.
 
     def låna_bok(self, titel):
         for bok in self.hitta_titel(titel): #Går över böcker som matchar titeln.
@@ -72,9 +72,9 @@ class Bibliotek:
 
     def lägg_till_bok(self, författare, titel, årtal):
         if not self.hitta_titel(titel): #Kontrollerar om boken inte redan finns.
-            self.böcker.append(Bok(författare, titel, årtal)) #Skapar ett nytt "bok"ojekt och lägger till den i listan.
+            self.böcker.append(Bok(författare, titel, int(årtal))) #Skapar ett nytt "bok"ojekt och lägger till den i listan.
             self.spara_till_fil() #Sparar ändringen till filen
-            return f"Boken '{titel}' av {författare} ({årtal}) är nu tillagd i biblioteket." #Retunerar meddlande att boken är tillagd.
+            return f"Boken '{titel}' av {författare} {int(årtal)} är nu tillagd i biblioteket." #Retunerar meddlande att boken är tillagd.
         return f"Boken '{titel}' finns redan i biblioteket." #Retunerar felmeddelande att boken redan finns.
 
     def ta_bort_bok(self, titel):
@@ -115,13 +115,19 @@ def main():
         if meny_val == "1":
             titel = input("Ange titel: ") #Ber användaren att ange titel.
             resultat = bibliotek.hitta_titel(titel) #Hittar bok som matchar titeln.
-            for bok in resultat: #Går över matchande böcker.
-                print(bok) #Ange ut boken.
+            if not resultat:
+                print("Det finns ingen bok med det namnet. Försök igen.")
+            else:
+                for bok in resultat: #Går över matchande böcker.
+                    print(bok) #Ange ut boken.
         elif meny_val == "2":
             författare = input("Ange författare: ") #Ber användaren att ange författare.
             resultat = bibliotek.hitta_författare(författare) #Hittar böcker som matchar förattaren.
-            for bok in resultat: #Går över matchande böcker.
-                print(bok) #Skriver ut boken.
+            if not resultat:
+                print("Ingen bok med den författaren hittades.")
+            else:
+                for bok in resultat: #Går över matchande böcker.
+                    print(bok) #Skriver ut boken.
         elif meny_val == "3":
             titel = input("Ange boken du vill låna: ") #Ber användaren att ange boken som den vill låna.
             print(bibliotek.låna_bok(titel)) #Försöker låna boken och skriver ut resultatet.
@@ -131,8 +137,13 @@ def main():
         elif meny_val == "5":
             författare = input("Ange författare: ") #Be användaren att ange författaren.
             titel = input("Ange titeln på den nya boken: ") #Be använderen att ange titeln på den nya boken.
-            årtal = input("Ange årtalet på den nya boken: ")
-            print(bibliotek.lägg_till_bok(författare, titel)) #Försöker lägg till boken och skriver ut resultatet.
+            while True:
+                try:
+                    årtal = int(input("Ange årtalet på den nya boken: "))
+                    break
+                except ValueError:
+                    print("Årtalet måste vara ett nummer.")
+            print(bibliotek.lägg_till_bok(författare, titel, årtal)) #Försöker lägg till boken och skriver ut resultatet.
         elif meny_val == "6":
             titel = input("Ange titeln på boken du vill ta bort: ") #Ber användaren att ange titeln som den vill ta bort.
             print(bibliotek.ta_bort_bok(titel)) #Försöker ta bort boken och skriver ut resultatet.

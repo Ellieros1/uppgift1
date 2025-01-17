@@ -38,7 +38,7 @@ class Bibliotek:
         if os.path.exists(self.filnamn): #Kontrollerar om filen finns.
             with open(self.filnamn, "r") as fil: #Öppnar filan i "r" alltså läsläge.
                 for rad in fil: #Går igenom varje rad i filen med en for loop.
-                    författare, titel, utlånad = rad.strip().split(",") #Delar upp raden författare, titel och ifall den är utlånad eller inte.
+                    författare, titel, årtal, utlånad = rad.strip().split(",") #Delar upp raden författare, titel och ifall den är utlånad eller inte.
                     böcker.append(Bok(författare, titel, int(utlånad))) #Lägger till ett bok objekt och lägger till det i listan med hjälp av "append".
         return böcker #Retunerar boklista
 

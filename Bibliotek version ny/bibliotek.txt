@@ -1,10 +1,11 @@
- William Shakespeare,Romeo och Julia,1597,0
- Joseph Heller,Catch 22,1995,1
- John Kennedy Toole,A Confederacy of Dunces,1980,1
- Douglas Adams,The Hitchhiker’s Guide to the Galaxy,1995,1
- Douglas Adams,The Restaurant at the End of the Universe,1995,1
- Douglas Adams,Life the Universe and Everything,1982,0
- Douglas Adams,Mostly Harmless,1992,1
- Isaac Asimov,I Robot,1950,1
- Miguel Cervantes,Don Quixote,1605,1
- Hjalmar Söderberg,Doktor Glas,1905,0
+William Shakespeare,Romeo och Julia,1597,0
+Joseph Heller,Catch 22,1995,1
+John Kennedy Toole,A Confederacy of Dunces,1980,1
+Douglas Adams,The Hitchhiker’s Guide to the Galaxy,1995,1
+Douglas Adams,The Restaurant at the End of the Universe,1995,1
+Douglas Adams,Life the Universe and Everything,1982,0
+Douglas Adams,Mostly Harmless,1992,1
+Isaac Asimov,I Robot,1950,1
+Miguel Cervantes,Don Quixote,1605,1
+Hjalmar Söderberg,Doktor Glas,1905,0
+Ellie Rosdahl,Mitt första program,2025,0
