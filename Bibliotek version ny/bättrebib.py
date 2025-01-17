@@ -89,7 +89,7 @@ class Bibliotek:
         return "\n".join(str(bok) for bok in self.böcker) # Retunerar Strängar som reprensenterar alla böcker i listan.
     
     def sortera_böcker(self, efter_titel=True):
-        self.böcker.sort(key=lambda bok: bok.titel if efter_titel else bok.årtal) # Sorterar böckerna efter title eller författare.
+        self.böcker.sort(key=lambda bok: bok.titel if efter_titel else bok.årtal) # Sorterar böckerna efter title eller årtal. Lambda-funktionen returnerar bok.titel om 'efter_titel' är True, annars returnerar den bok.årtal
         return self.lista_böcker() #Retunerar den sorterade listan.
 
 # ------------------------------ Huvudprogram --------------------------------- #
